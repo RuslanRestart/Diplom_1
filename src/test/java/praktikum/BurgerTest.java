@@ -3,16 +3,27 @@ package praktikum;
 import org.hamcrest.MatcherAssert;
 import org.junit.Assert;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
 
+@RunWith(MockitoJUnitRunner.class)
 public class BurgerTest {
+
+    @Mock
+    private Bun bunMock;
+
+    @Mock
+    private Ingredient ingredientMock;
 
     @Test
     public void burgerBunCannotBeNullTest() {
         Burger burger = new Burger();
-        burger.setBuns(new Bun("Краторная булка", 1255));
+        burger.setBuns(bunMock);
         assertNotNull("Burger's bun can't be null!", burger.bun);
     }
 
@@ -31,7 +42,7 @@ public class BurgerTest {
     @Test
     public void removeIngredientTest(){
         Burger burger = new Burger();
-        burger.addIngredient(new Ingredient(IngredientType.SAUCE, "Соус традиционный галактический", 15));
+        burger.addIngredient(ingredientMock);
         burger.removeIngredient(0);
         assertTrue("Burger has ingredient!", burger.ingredients.isEmpty());
     }
@@ -52,9 +63,11 @@ public class BurgerTest {
     @Test
     public void getBurgerPriceIsMoreThan0Test(){
         Burger burger = new Burger();
-        burger.setBuns(new Bun("Краторная булка", 1255));
-        burger.addIngredient(new Ingredient(IngredientType.SAUCE, "Соус традиционный галактический", 15));
-        burger.setBuns(new Bun("Краторная булка", 1255));
+        burger.setBuns(bunMock);
+        Mockito.when(bunMock.getPrice()).thenReturn(1255f);
+        burger.addIngredient(ingredientMock);
+        Mockito.when(ingredientMock.getPrice()).thenReturn(15f);
+        burger.setBuns(bunMock);
         assertTrue("The price of a burger must exceed 0!", burger.getPrice() > 0);
     }
 

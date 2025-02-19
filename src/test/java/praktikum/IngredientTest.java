@@ -1,28 +1,38 @@
 package praktikum;
 
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
 
 import static org.junit.Assert.*;
 
-public class IngredientTest {
+@RunWith(Parameterized.class)
+public class IngredientTest{
+    private final IngredientType type;
+    private final String name;
+    private final float price;
 
-    @Test
-    public void getIngredientPriceIsMoreThan0Test(){
-        Ingredient ingredientSauce = new Ingredient(IngredientType.SAUCE, "Соус Spicy-X", 90);
-        assertTrue("The price of a ingredient must exceed 0!", ingredientSauce.getPrice() > 0);
+    public IngredientTest(IngredientType type, String name, float price) {
+        this.type = type;
+        this.name = name;
+        this.price = price;
+    }
+
+    @Parameterized.Parameters
+    public static Object[][] testData(){
+        return new Object[][]{
+                {IngredientType.SAUCE, "Соус Spicy-X", 90},
+                {IngredientType.FILLING, "Говяжий метеорит", 3000},
+                {IngredientType.SAUCE, "Соус традиционный", 15}
+        };
     }
 
     @Test
-    public void getIngredientNameIsNotNullTest(){
-        Ingredient ingredientFilling = new Ingredient(IngredientType.FILLING, "Говяжий метеорит (отбивная)", 3000);
-        assertNotNull("Ingredient name can't be null!", ingredientFilling.getName());
+    public void testIngredientNameTypeAndPrice() {
+        Ingredient ingredient = new Ingredient(type, name, price);
+        assertEquals("Method getType() must returns a correct type!", type, ingredient.getType());
+        assertNotNull("Ingredient name can't be null!", ingredient.getName());
+        assertTrue("The price of a ingredient must exceed 0!", ingredient.getPrice() > 0);
+
     }
-
-    @Test
-    public void getIngredientTypeTest(){
-        Ingredient ingredientFilling = new Ingredient(IngredientType.FILLING, "Говяжий метеорит (отбивная)", 3000);
-        assertEquals("Method getType() must returns a correct type!", IngredientType.FILLING, ingredientFilling.getType());
-    }
-
-
 }
